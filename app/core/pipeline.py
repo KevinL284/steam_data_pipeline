@@ -2,7 +2,7 @@ import json
 
 from app.extract.steam_api import fetch_featured_games
 from app.transform.clean_data import transform_games_data
-
+from app.load.database import save_games_data
 
 def run_pipeline():
     data = fetch_featured_games()
@@ -14,3 +14,6 @@ def run_pipeline():
 
     df = transform_games_data(data)
     print(df.head())
+    save_games_data(df)
+
+    
