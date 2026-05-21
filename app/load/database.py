@@ -4,8 +4,7 @@ modulo de acesso ao DB
 
 
 from sqlalchemy import create_engine
-
-DATABASE_URL = "sqlite:///data/games.db"
+from app.core.config import DATABASE_URL
 
 engine = create_engine(DATABASE_URL)
 # Depois monto um env pra mais segurança de dados.
