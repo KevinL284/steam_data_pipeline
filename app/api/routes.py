@@ -78,7 +78,7 @@ def list_games_by_platform(platform: str):
 
     return dataframe_to_json(df)
 
-
+ 
 @router.get("/games/controller-support")
 def list_games_with_controller_support():
     """
