@@ -23,9 +23,9 @@ def transform_games_data(data):
             "original_price": game.get("original_price", 0) / 100,
             "final_price": game.get("final_price", 0) / 100,
             "currency": game.get("currency"),
-            "windows_avaible": game.get("windows_available"),
-            "mac_avaible": game.get("mac_available"),
-            "linux_avaible": game.get("linux_available"),
+            "windows_available": game.get("windows_available"),
+            "mac_available": game.get("mac_available"),     # Erro de sintaxe que corrigi, troquei avaible por available.
+            "linux_available": game.get("linux_available"), # sim, nem sempre os erros são de lógica.
             "controller_support": game.get("controller_support"),
         })
 
