@@ -1,27 +1,37 @@
 """
-Só pro pylint parar de gritar:
 Steam API extraction module.
 """
 
 import requests
 
-STEAM_FEATURED_URL = "https://store.steampowered.com/api/featuredcategories/"
+from app.core.config import REQUEST_TIMEOUT, STEAM_API_URL
+
 
 def fetch_featured_games():
+    """
+    Fetch featured games data from Steam API.
+    """
+
     try:
         response = requests.get(
-        STEAM_FEATURED_URL,
-        timeout = 10
-      )
+            STEAM_API_URL,
+            timeout=REQUEST_TIMEOUT
+        )
+
         response.raise_for_status()
-        data = response.json()
-        return data
+
+        return response.json()
+
     except requests.exceptions.Timeout:
-        print("Requisição excedeu o tempo limete.")
+        print("Requisição excedeu o tempo limite.")
+
     except requests.exceptions.HTTPError as error:
-        print(f"HTTP Error: {error}")
+        print(f"HTTP error: {error}")
+
     except requests.exceptions.RequestException as error:
         print(f"Falha na requisição: {error}")
+
     except ValueError:
         print("JSON inválido recebido.")
+
     return None
