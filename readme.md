@@ -2,7 +2,14 @@
 
 Pipeline ETL modular e API REST desenvolvidos com Python, FastAPI, Pandas e SQLite.
 
-O projeto consome dados públicos da Steam, realiza extração, transformação e persistência dos dados, além de disponibilizar os dados através de uma API REST.
+O projeto consome dados públicos da Steam, realiza extração, transformação e persistência dos dados, além de disponibilizar os dados através de uma API REST organizada e tipada.
+
+O foco do projeto é:
+- aprendizado prático;
+- engenharia de dados;
+- backend moderno;
+- arquitetura limpa;
+- construção de portfólio profissional.
 
 ---
 
@@ -11,13 +18,19 @@ O projeto consome dados públicos da Steam, realiza extração, transformação 
 ```text
 Steam API
    ↓
-Camada de Extract
+Extract Layer
    ↓
-Camada de Transform
+Transform Layer
+   ↓
+Load Layer
    ↓
 SQLite
    ↓
-FastAPI REST API
+Repository Layer
+   ↓
+FastAPI
+   ↓
+Pydantic Schemas
 ```
 
 ---
@@ -29,61 +42,120 @@ FastAPI REST API
 - Pandas
 - SQLAlchemy
 - SQLite
+- Pydantic
+- Pytest
 - Uvicorn
+- python-dotenv
 
 ---
 
-# Funcionalidades
+# Funcionalidades Implementadas
+
+## Pipeline ETL
 
 - Consumo da API pública da Steam
-- Pipeline ETL modular
+- Extração de dados via HTTP
+- Transformação e normalização dos dados
+- Conversão JSON → DataFrame
 - Persistência em SQLite
-- API REST com FastAPI
-- Paginação
-- Busca textual
-- Filtros por preço e plataforma
-- Estatísticas gerais
-- Repository Pattern
-- Queries parametrizadas
-- Camada de serialização
+- Recriação automática da tabela `games`
 
 ---
 
-# Estrutura do Projeto
+## API REST
 
-```text
-steam-data-pipeline/
-│
-├── app/
-│   │
-│   ├── api/
-│   │   └── routes.py
-│   │
-│   ├── core/
-│   │   ├── config.py
-│   │   └── pipeline.py
-│   │
-│   ├── extract/
-│   │   └── steam_api.py
-│   │
-│   ├── transform/
-│   │   └── clean_data.py
-│   │
-│   ├── load/
-│   │   └── database.py
-│   │
-│   ├── repositories/
-│   │   └── games_repository.py
-│   │
-│   ├── utils/
-│   │   └── serializer.py
-│   │
-│   └── main.py
-│
-├── data/
-├── requirements.txt
-├── run.py
-└── README.md
+Endpoints disponíveis:
+
+```http
+GET /games
+GET /games/under/{price}
+GET /games/top-discounts
+GET /games/search/{name}
+GET /games/platform/{platform}
+GET /games/controller-support
+GET /stats
+```
+
+Funcionalidades:
+- paginação;
+- busca textual;
+- filtros por preço;
+- filtros por plataforma;
+- estatísticas gerais;
+- suporte a controle.
+
+---
+
+# Qualidade e Arquitetura
+
+O projeto atualmente implementa:
+
+- Repository Pattern
+- Logging estruturado
+- Queries SQL parametrizadas
+- Configuração centralizada via `.env`
+- Separação de responsabilidades
+- Pydantic Schemas
+- Testes automatizados
+- Serializer customizado
+- Estrutura modular
+- Versionamento por feature branches
+
+---
+
+# Logging Estruturado
+
+A aplicação possui logs organizados por camada:
+
+- extract
+- transform
+- load
+- repository
+- routes
+- pipeline
+- main
+
+Tipos de log utilizados:
+- `INFO`
+- `WARNING`
+- `ERROR`
+
+Objetivo:
+- observabilidade;
+- rastreabilidade;
+- debugging;
+- monitoramento futuro.
+
+---
+
+# Testes Automatizados
+
+O projeto possui testes utilizando `pytest`.
+
+Cobertura inicial:
+- transformação de dados;
+- serialização;
+- rotas FastAPI;
+- validação de status code;
+- validação de payload;
+- validação de erros HTTP.
+
+Executar testes:
+
+```bash
+pytest
+```
+
+---
+
+# Configuração da Aplicação
+
+Variáveis de ambiente:
+
+```env
+DATABASE_URL=sqlite:///data/games.db
+STEAM_API_URL=https://store.steampowered.com/api/featuredcategories/
+REQUEST_TIMEOUT=10
 ```
 
 ---
@@ -137,9 +209,9 @@ python run.py
 ```
 
 O pipeline irá:
-- Extrair os dados da Steam
-- Transformar e normalizar os dados
-- Persistir os dados no SQLite
+- extrair os dados da Steam;
+- transformar e normalizar os dados;
+- persistir os dados no SQLite.
 
 ---
 
@@ -161,79 +233,79 @@ http://127.0.0.1:8000/docs
 
 ---
 
-# Endpoints Disponíveis
+# Fluxo de Versionamento
 
-## Listar jogos
+O projeto utiliza workflow baseado em:
+- feature branches;
+- commits segmentados;
+- pull requests;
+- merge incremental na `main`.
 
-```http
-GET /games
-```
+Branches já utilizadas:
 
----
-
-## Jogos abaixo de determinado preço
-
-```http
-GET /games/under/{price}
-```
-
----
-
-## Jogos com maiores descontos
-
-```http
-GET /games/top-discounts
-```
-
----
-
-## Buscar jogos por nome
-
-```http
-GET /games/search/{name}
-```
-
----
-
-## Jogos por plataforma
-
-```http
-GET /games/platform/{platform}
-```
-
-Plataformas disponíveis:
-- windows
-- mac
-- linux
-
----
-
-## Jogos com suporte a controle
-
-```http
-GET /games/controller-support
-```
-
----
-
-## Estatísticas gerais
-
-```http
-GET /stats
+```text
+main
+feature/api-filters
+feat/pydantic-schemas
+feat/logging
+feat/tests
+docs/project-readme
+chrore/config-and-quality
 ```
 
 ---
 
 # Próximas Melhorias
 
+## Infraestrutura
 - Docker
+- Docker Compose
 - PostgreSQL
-- Cache com Redis
-- Testes automatizados
-- CI/CD
-- Logging estruturado
-- Pydantic models
 - Deploy em nuvem
+
+---
+
+## Engenharia de Software
+- CI/CD com GitHub Actions
+- Cobertura avançada de testes
+- Fixtures e mocks
+- Alembic migrations
+
+---
+
+## Backend e Dados
+- Camada Service
+- Cache com Redis
+- Async requests
+- Métricas e observabilidade avançada
+
+---
+
+# Possíveis Próximas Branches
+
+```text
+feat/docker
+feat/postgresql
+feat/github-actions
+feat/service-layer
+feat/cache-redis
+feat/async-extract
+test/integration-tests
+refactor/database-layer
+```
+
+---
+
+# Objetivo Técnico do Projeto
+
+O projeto busca consolidar conhecimentos em:
+- backend com Python;
+- engenharia de dados;
+- APIs REST;
+- arquitetura modular;
+- testes automatizados;
+- observabilidade;
+- boas práticas de engenharia de software.
 
 ---
 
