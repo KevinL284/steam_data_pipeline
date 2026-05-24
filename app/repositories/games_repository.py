@@ -2,16 +2,21 @@
 Repository layer for games database queries.
 """
 
+import logging
+
 import pandas as pd
 from sqlalchemy import create_engine, text
 
 from app.core.config import DATABASE_URL
 
+logger = logging.getLogger(__name__)
 
 engine = create_engine(DATABASE_URL)
 
 
 def get_all_games(limit: int = 10, offset: int = 0):
+    logger.info("Buscando jogos com paginação. limit=%s, offset=%s", limit, offset)
+
     query = text("""
         SELECT *
         FROM games
@@ -26,6 +31,8 @@ def get_all_games(limit: int = 10, offset: int = 0):
 
 
 def get_games_under_price(price: float):
+    logger.info("Buscando jogos com preço final até %s", price)
+
     query = text("""
         SELECT *
         FROM games
@@ -39,6 +46,8 @@ def get_games_under_price(price: float):
 
 
 def get_top_discounts(discount: float = 0):
+    logger.info("Buscando jogos com desconto acima de %s", discount)
+
     query = text("""
         SELECT *
         FROM games
@@ -53,6 +62,8 @@ def get_top_discounts(discount: float = 0):
 
 
 def search_games_by_name(name: str):
+    logger.info("Buscando jogos pelo nome: %s", name)
+
     query = text("""
         SELECT *
         FROM games
@@ -65,6 +76,8 @@ def search_games_by_name(name: str):
 
 
 def get_games_by_platform(platform: str):
+    logger.info("Buscando jogos pela plataforma: %s", platform)
+
     allowed_platforms = {
         "windows": "windows_available",
         "mac": "mac_available",
@@ -74,6 +87,7 @@ def get_games_by_platform(platform: str):
     column = allowed_platforms.get(platform.lower())
 
     if column is None:
+        logger.warning("Plataforma inválida recebida: %s", platform)
         return None
 
     query = text(f"""
@@ -86,6 +100,8 @@ def get_games_by_platform(platform: str):
 
 
 def get_games_with_controller_support():
+    logger.info("Buscando jogos com suporte completo a controle")
+
     query = text("""
         SELECT *
         FROM games
@@ -96,6 +112,8 @@ def get_games_with_controller_support():
 
 
 def get_games_stats():
+    logger.info("Buscando estatísticas gerais dos jogos")
+
     query = text("""
         SELECT
             COUNT(*) AS total_games,
