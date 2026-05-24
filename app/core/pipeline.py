@@ -1,19 +1,31 @@
-import json
+import logging
 
 from app.extract.steam_api import fetch_featured_games
 from app.transform.clean_data import transform_games_data
 from app.load.database import save_games_data
 
+logger = logging.getLogger(__name__)
+
+
 def run_pipeline():
+    logger.info("Iniciando execução do pipeline ETL")
+
     data = fetch_featured_games()
+
     if data is None:
-        print("Pipeline falhou ao extrair os dados.")
+        logger.error("Pipeline interrompido: falha na extração dos dados")
         return
 
-    print("Pipeline executado com sucesso. Dados extraídos:")
+    logger.info("Dados extraídos com sucesso")
 
     df = transform_games_data(data)
-    print(df.head())
+
+    if df.empty:
+        logger.warning("Pipeline interrompido: transformação retornou DataFrame vazio")
+        return
+
+    logger.info("Dados transformados com sucesso. Total de registros: %s", len(df))
+
     save_games_data(df)
 
-    
+    logger.info("Pipeline ETL executado com sucesso")
