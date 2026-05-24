@@ -1,42 +1,101 @@
 """
-Modulo de rotas da API
+Módulo de rotas da API.
 """
 
-from fastapi import APIRouter
-from sqlalchemy import create_engine
-import pandas as pd
+from fastapi import APIRouter, HTTPException
+from app.repositories.games_repository import (
+    get_all_games,
+    get_games_under_price,
+    get_top_discounts,
+    search_games_by_name,
+    get_games_by_platform,
+    get_games_with_controller_support,
+    get_games_stats
+)
+from app.utils.serializer import dataframe_to_json
 
-
-from app.core.config import DATABASE_URL
 
 router = APIRouter()
-engine = create_engine(DATABASE_URL)
+
 
 @router.get("/games")
-def get_games():
+def list_games(limit: int = 10, offset: int = 0):
     """
-    Nosso primeiro Endpoint pra retornar os jogos
+    Retorna jogos com paginação.
     """
-    query = "SELECT * FROM games"
-    df = pd.read_sql(query, engine)
-    return (
-        df.astype(object)
-        .where(pd.notnull(df), None)
-        .to_dict(orient="records")
-    )  #vou testar isso no outro end point depois.
+
+    df = get_all_games(limit=limit, offset=offset)
+
+    return dataframe_to_json(df)
+
 
 @router.get("/games/under/{price}")
-def get_games_under_price(price: float):
+def list_games_under_price(price: float):
     """
-    Return games cheaper than a given price.
-    """
-
-    query = f"""
-        SELECT *
-        FROM games
-        WHERE final_price <= {price}
+    Retorna jogos abaixo de determinado preço.
     """
 
-    df = pd.read_sql(query, engine)
-    return df.fillna("")
-    return df.to_dict(orient="records")
+    df = get_games_under_price(price)
+
+    return dataframe_to_json(df)
+
+
+@router.get("/games/top-discounts")
+def list_top_discounts(discount: float = 0):
+    """
+    Retorna jogos com maiores descontos.
+    """
+
+    df = get_top_discounts(discount)
+
+    return dataframe_to_json(df)
+
+
+@router.get("/games/search/{name}")
+def search_games(name: str):
+    """
+    Busca jogos pelo nome.
+    """
+
+    df = search_games_by_name(name)
+
+    return dataframe_to_json(df)
+
+
+@router.get("/games/platform/{platform}")
+def list_games_by_platform(platform: str):
+    """
+    Retorna jogos disponíveis em uma plataforma.
+    """
+
+    df = get_games_by_platform(platform)
+
+    if df is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid platform. Use: windows, mac or linux."
+        )
+
+    return dataframe_to_json(df)
+
+
+@router.get("/games/controller-support")
+def list_games_with_controller_support():
+    """
+    Retorna jogos com suporte completo a controle.
+    """
+
+    df = get_games_with_controller_support()
+
+    return dataframe_to_json(df)
+
+
+@router.get("/stats")
+def list_stats():
+    """
+    Retorna estatísticas gerais dos jogos.
+    """
+
+    df = get_games_stats()
+
+    return dataframe_to_json(df)[0]
