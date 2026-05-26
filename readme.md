@@ -1,8 +1,8 @@
 # Steam Data Pipeline API
 
-Pipeline ETL modular e API REST desenvolvidos com Python, FastAPI, Pandas e SQLite.
+Pipeline ETL modular e API REST desenvolvidos com Python, FastAPI, Pandas e PostgreSQL.
 
-O projeto consome dados públicos da Steam, realiza extração, transformação e persistência dos dados, além de disponibilizar os dados através de uma API REST organizada e tipada.
+O projeto consome dados públicos da Steam, realiza extração, transformação e persistência dos dados, além de disponibilizar os dados através de uma API REST organizada, tipada e containerizada.
 
 O foco do projeto é:
 - aprendizado prático;
@@ -24,7 +24,7 @@ Transform Layer
    ↓
 Load Layer
    ↓
-SQLite
+PostgreSQL
    ↓
 Repository Layer
    ↓
@@ -41,9 +41,12 @@ Pydantic Schemas
 - FastAPI
 - Pandas
 - SQLAlchemy
-- SQLite
+- PostgreSQL
 - Pydantic
 - Pytest
+- Docker
+- Docker Compose
+- psycopg2-binary
 - Uvicorn
 - python-dotenv
 
@@ -57,7 +60,7 @@ Pydantic Schemas
 - Extração de dados via HTTP
 - Transformação e normalização dos dados
 - Conversão JSON → DataFrame
-- Persistência em SQLite
+- Persistência em PostgreSQL
 - Recriação automática da tabela `games`
 
 ---
@@ -99,6 +102,9 @@ O projeto atualmente implementa:
 - Testes automatizados
 - Serializer customizado
 - Estrutura modular
+- Docker Compose
+- Containerização da aplicação
+- PostgreSQL via Docker
 - Versionamento por feature branches
 
 ---
@@ -132,7 +138,7 @@ Objetivo:
 
 O projeto possui testes utilizando `pytest`.
 
-Cobertura inicial:
+Cobertura atual:
 - transformação de dados;
 - serialização;
 - rotas FastAPI;
@@ -153,7 +159,7 @@ pytest
 Variáveis de ambiente:
 
 ```env
-DATABASE_URL=sqlite:///data/games.db
+DATABASE_URL=postgresql+psycopg2://steam_user:steam_password@db:5432/steam_data
 STEAM_API_URL=https://store.steampowered.com/api/featuredcategories/
 REQUEST_TIMEOUT=10
 ```
@@ -202,33 +208,35 @@ pip install -r requirements.txt
 
 ---
 
-# Executando o Pipeline ETL
+# Executando com Docker
+
+## Subir containers
 
 ```bash
-python run.py
+docker compose up --build
+```
+
+---
+
+## Executar pipeline ETL
+
+```bash
+docker compose exec api python run.py
 ```
 
 O pipeline irá:
 - extrair os dados da Steam;
 - transformar e normalizar os dados;
-- persistir os dados no SQLite.
+- persistir os dados no PostgreSQL.
 
 ---
 
 # Executando a API
 
-```bash
-uvicorn app.main:app --reload
-```
-
----
-
-# Documentação da API
-
-Swagger:
+Swagger disponível em:
 
 ```text
-http://127.0.0.1:8000/docs
+http://localhost:8000/docs
 ```
 
 ---
@@ -249,6 +257,8 @@ feature/api-filters
 feat/pydantic-schemas
 feat/logging
 feat/tests
+feat/docker
+feat/postgresql
 docs/project-readme
 chrore/config-and-quality
 ```
@@ -258,10 +268,9 @@ chrore/config-and-quality
 # Próximas Melhorias
 
 ## Infraestrutura
-- Docker
-- Docker Compose
-- PostgreSQL
 - Deploy em nuvem
+- Reverse proxy com Nginx
+- Persistência externa
 
 ---
 
@@ -284,12 +293,12 @@ chrore/config-and-quality
 # Possíveis Próximas Branches
 
 ```text
-feat/docker
-feat/postgresql
 feat/github-actions
 feat/service-layer
 feat/cache-redis
 feat/async-extract
+feat/alembic
+feat/nginx
 test/integration-tests
 refactor/database-layer
 ```
@@ -305,6 +314,7 @@ O projeto busca consolidar conhecimentos em:
 - arquitetura modular;
 - testes automatizados;
 - observabilidade;
+- infraestrutura com Docker;
 - boas práticas de engenharia de software.
 
 ---
