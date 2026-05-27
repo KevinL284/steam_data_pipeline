@@ -10,6 +10,11 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: sqlite:///test.db
+      STEAM_API_URL: https://store.steampowered.com/api/featuredcategories/
+      REQUEST_TIMEOUT: 10
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,6 +26,9 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Run pipeline
+        run: python run.py
 
       - name: Run tests
         run: pytest
