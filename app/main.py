@@ -1,6 +1,7 @@
 """
 Aplicação MAIN FastAPI
 """
+
 import logging
 
 from fastapi import FastAPI
@@ -12,9 +13,7 @@ setup_logging()
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI(
-    title="Pipeline de dados Steam API"
-)
+app = FastAPI(title="Pipeline de dados Steam API")
 
 app.include_router(router)
 

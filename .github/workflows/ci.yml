@@ -33,5 +33,14 @@ jobs:
       - name: Run pipeline
         run: python run.py
 
-      - name: Run tests
-        run: python -m pytest -v
+      - name: Run flake8
+        run: flake8 app
+
+      - name: Run black check
+        run: black --check .
+
+      - name: Run isort check
+        run: isort --check-only .
+
+      - name: Run tests with coverage
+        run: python -m pytest --cov=app --cov-report=term-missing -v

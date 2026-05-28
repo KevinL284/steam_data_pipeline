@@ -8,12 +8,12 @@ from fastapi import APIRouter, HTTPException
 
 from app.repositories.games_repository import (
     get_all_games,
+    get_games_by_platform,
+    get_games_stats,
     get_games_under_price,
+    get_games_with_controller_support,
     get_top_discounts,
     search_games_by_name,
-    get_games_by_platform,
-    get_games_with_controller_support,
-    get_games_stats,
 )
 from app.schemas.game_schema import GameResponse, StatsResponse
 from app.utils.serializer import dataframe_to_json
@@ -89,8 +89,7 @@ def list_games_by_platform(platform: str):
         logger.warning("Plataforma inválida informada na rota: %s", platform)
 
         raise HTTPException(
-            status_code=400,
-            detail="Invalid platform. Use: windows, mac or linux."
+            status_code=400, detail="Invalid platform. Use: windows, mac or linux."
         )
 
     return dataframe_to_json(df)
