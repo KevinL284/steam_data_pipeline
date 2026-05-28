@@ -24,10 +24,14 @@ def get_all_games(limit: int = 10, offset: int = 0):
         OFFSET :offset
     """)
 
-    return pd.read_sql(query, engine, params={
-        "limit": limit,
-        "offset": offset,
-    })
+    return pd.read_sql(
+        query,
+        engine,
+        params={
+            "limit": limit,
+            "offset": offset,
+        },
+    )
 
 
 def get_games_under_price(price: float):
@@ -40,9 +44,13 @@ def get_games_under_price(price: float):
         ORDER BY final_price ASC
     """)
 
-    return pd.read_sql(query, engine, params={
-        "price": price,
-    })
+    return pd.read_sql(
+        query,
+        engine,
+        params={
+            "price": price,
+        },
+    )
 
 
 def get_top_discounts(discount: float = 0):
@@ -56,9 +64,13 @@ def get_top_discounts(discount: float = 0):
         LIMIT 10
     """)
 
-    return pd.read_sql(query, engine, params={
-        "discount": discount,
-    })
+    return pd.read_sql(
+        query,
+        engine,
+        params={
+            "discount": discount,
+        },
+    )
 
 
 def search_games_by_name(name: str):
@@ -70,9 +82,13 @@ def search_games_by_name(name: str):
         WHERE LOWER(name) LIKE LOWER(:search)
     """)
 
-    return pd.read_sql(query, engine, params={
-        "search": f"%{name}%",
-    })
+    return pd.read_sql(
+        query,
+        engine,
+        params={
+            "search": f"%{name}%",
+        },
+    )
 
 
 def get_games_by_platform(platform: str):

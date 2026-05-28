@@ -21,20 +21,12 @@ def save_games_data(df):
     logger.info("Iniciando persistência dos dados no banco")
 
     try:
-        df.to_sql(
-            "games",
-            con=engine,
-            if_exists="replace",
-            index=False
-        )
+        df.to_sql("games", con=engine, if_exists="replace", index=False)
 
         logger.info(
             "Dados salvos com sucesso no banco de dados. Total de registros: %s",
-            len(df)
+            len(df),
         )
 
     except Exception as error:
-        logger.error(
-            "Erro ao salvar dados no banco de dados: %s",
-            error
-        )
+        logger.error("Erro ao salvar dados no banco de dados: %s", error)

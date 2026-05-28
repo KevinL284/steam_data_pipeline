@@ -4,13 +4,15 @@ from app.utils.serializer import dataframe_to_json
 
 
 def test_dataframe_to_json_converts_dataframe_to_list_of_dicts():
-    df = pd.DataFrame([
-        {
-            "id": 1,
-            "name": "Test Game",
-            "price": 9.99,
-        }
-    ])
+    df = pd.DataFrame(
+        [
+            {
+                "id": 1,
+                "name": "Test Game",
+                "price": 9.99,
+            }
+        ]
+    )
 
     result = dataframe_to_json(df)
 
@@ -21,12 +23,14 @@ def test_dataframe_to_json_converts_dataframe_to_list_of_dicts():
 
 
 def test_dataframe_to_json_converts_nan_to_none():
-    df = pd.DataFrame([
-        {
-            "id": 1,
-            "name": None,
-        }
-    ])
+    df = pd.DataFrame(
+        [
+            {
+                "id": 1,
+                "name": None,
+            }
+        ]
+    )
 
     result = dataframe_to_json(df)
 

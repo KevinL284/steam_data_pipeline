@@ -19,10 +19,7 @@ def fetch_featured_games():
     logger.info("Iniciando extração de dados da Steam API")
 
     try:
-        response = requests.get(
-            STEAM_API_URL,
-            timeout=REQUEST_TIMEOUT
-        )
+        response = requests.get(STEAM_API_URL, timeout=REQUEST_TIMEOUT)
 
         logger.info("Requisição enviada para a Steam API")
 

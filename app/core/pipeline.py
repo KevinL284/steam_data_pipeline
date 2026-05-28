@@ -1,8 +1,8 @@
 import logging
 
 from app.extract.steam_api import fetch_featured_games
-from app.transform.clean_data import transform_games_data
 from app.load.database import save_games_data
+from app.transform.clean_data import transform_games_data
 
 logger = logging.getLogger(__name__)
 
