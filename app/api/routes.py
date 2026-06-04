@@ -6,17 +6,8 @@ import logging
 
 from fastapi import APIRouter, HTTPException
 
-from app.repositories.games_repository import (
-    get_all_games,
-    get_games_by_platform,
-    get_games_stats,
-    get_games_under_price,
-    get_games_with_controller_support,
-    get_top_discounts,
-    search_games_by_name,
-)
 from app.schemas.game_schema import GameResponse, StatsResponse
-from app.utils.serializer import dataframe_to_json
+from app.services.game_service import GameService
 
 logger = logging.getLogger(__name__)
 
@@ -31,9 +22,7 @@ def list_games(limit: int = 10, offset: int = 0):
 
     logger.info("Requisição recebida em /games. limit=%s, offset=%s", limit, offset)
 
-    df = get_all_games(limit=limit, offset=offset)
-
-    return dataframe_to_json(df)
+    return GameService.list_games(limit=limit, offset=offset)
 
 
 @router.get("/games/under/{price}", response_model=list[GameResponse])
@@ -44,9 +33,7 @@ def list_games_under_price(price: float):
 
     logger.info("Requisição recebida em /games/under/%s", price)
 
-    df = get_games_under_price(price)
-
-    return dataframe_to_json(df)
+    return GameService.list_games_under_price(price=price)
 
 
 @router.get("/games/top-discounts", response_model=list[GameResponse])
@@ -57,9 +44,7 @@ def list_top_discounts(discount: float = 0):
 
     logger.info("Requisição recebida em /games/top-discounts. discount=%s", discount)
 
-    df = get_top_discounts(discount)
-
-    return dataframe_to_json(df)
+    return GameService.list_top_discounts(discount=discount)
 
 
 @router.get("/games/search/{name}", response_model=list[GameResponse])
@@ -70,9 +55,7 @@ def search_games(name: str):
 
     logger.info("Requisição recebida em /games/search/%s", name)
 
-    df = search_games_by_name(name)
-
-    return dataframe_to_json(df)
+    return GameService.search_games(name=name)
 
 
 @router.get("/games/platform/{platform}", response_model=list[GameResponse])
@@ -83,16 +66,16 @@ def list_games_by_platform(platform: str):
 
     logger.info("Requisição recebida em /games/platform/%s", platform)
 
-    df = get_games_by_platform(platform)
+    games = GameService.list_games_by_platform(platform=platform)
 
-    if df is None:
+    if games is None:
         logger.warning("Plataforma inválida informada na rota: %s", platform)
 
         raise HTTPException(
             status_code=400, detail="Invalid platform. Use: windows, mac or linux."
         )
 
-    return dataframe_to_json(df)
+    return games
 
 
 @router.get("/games/controller-support", response_model=list[GameResponse])
@@ -103,9 +86,7 @@ def list_games_with_controller_support():
 
     logger.info("Requisição recebida em /games/controller-support")
 
-    df = get_games_with_controller_support()
-
-    return dataframe_to_json(df)
+    return GameService.list_games_with_controller_support()
 
 
 @router.get("/stats", response_model=StatsResponse)
@@ -116,6 +97,4 @@ def list_stats():
 
     logger.info("Requisição recebida em /stats")
 
-    df = get_games_stats()
-
-    return dataframe_to_json(df)[0]
+    return GameService.list_stats()
