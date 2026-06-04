@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 
-@patch("app.api.routes.get_all_games")
+@patch("app.services.game_service.get_all_games")
 def test_get_games_returns_200(
     mock_get_all_games,
     client,
@@ -15,7 +15,7 @@ def test_get_games_returns_200(
     assert isinstance(response.json(), list)
 
 
-@patch("app.api.routes.get_games_stats")
+@patch("app.services.game_service.get_games_stats")
 def test_get_stats_returns_200(
     mock_get_games_stats,
     client,
@@ -29,7 +29,7 @@ def test_get_stats_returns_200(
     assert isinstance(response.json(), dict)
 
 
-@patch("app.api.routes.get_games_by_platform")
+@patch("app.services.game_service.get_games_by_platform")
 def test_get_games_by_valid_platform_returns_200(
     mock_get_games_by_platform,
     client,
