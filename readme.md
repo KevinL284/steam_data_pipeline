@@ -20,7 +20,7 @@ O foco do projeto é:
 
 # Arquitetura do Projeto
 
-```text
+```
 Steam API
    ↓
 Extract Layer
@@ -32,6 +32,8 @@ Load Layer
 PostgreSQL
    ↓
 Repository Layer
+   ↓
+Service Layer
    ↓
 FastAPI
    ↓
@@ -118,6 +120,7 @@ Funcionalidades:
 O projeto atualmente implementa:
 
 * Repository Pattern
+* Service Layer
 * Logging estruturado
 * Queries SQL parametrizadas
 * Configuração centralizada via `.env`
@@ -128,7 +131,9 @@ O projeto atualmente implementa:
 * Containerização da aplicação
 * PostgreSQL via Docker
 * Versionamento por feature branches
-* Integração contínua com GitHub Actions
+* Pull Requests
+* GitHub Actions
+* Integração contínua
 
 ---
 
@@ -158,27 +163,26 @@ Objetivos:
 * preparação para monitoramento futuro.
 
 ---
-
 # Testes Automatizados
 
-O projeto possui testes utilizando `pytest`.
+O projeto possui testes automatizados utilizando `pytest`.
 
 Cobertura atual:
 
-* transformação de dados;
+**67%**
+
+Atualmente são testados:
+
+* transformações de dados;
 * serialização;
 * rotas FastAPI;
+* repositories;
 * validação de status code;
 * validação de payload;
-* validação de erros HTTP.
+* validação de erros HTTP;
+* consultas da camada de acesso a dados.
 
 Executar testes:
-
-```bash
-pytest
-```
-
-Executar cobertura:
 
 ```bash
 pytest --cov=app --cov-report=term-missing
@@ -298,6 +302,9 @@ http://localhost:8000/docs
 
 ---
 
+### Fluxo de Desenvolvimento
+
+```text
 # Fluxo de Desenvolvimento
 
 O projeto utiliza workflow baseado em:
@@ -305,6 +312,8 @@ O projeto utiliza workflow baseado em:
 * feature branches;
 * commits segmentados;
 * pull requests;
+* GitHub Actions;
+* validação automática via CI;
 * merge incremental na `main`;
 * roadmap técnico com GitHub Projects;
 * organização de issues por tarefas e melhorias.
@@ -315,9 +324,9 @@ O projeto utiliza workflow baseado em:
 
 ## Engenharia de Software
 
-* Cobertura avançada de testes
-* Fixtures e mocks
-* Service Layer
+* Cobertura acima de 75%
+* Testes da camada de serviços
+* Testes do pipeline ETL
 * Alembic migrations
 * Refatoração da camada de configuração
 
@@ -339,6 +348,9 @@ O projeto utiliza workflow baseado em:
 * Observabilidade avançada
 * Métricas e monitoramento
 * Expansão do pipeline de dados
+* Airflow
+* Spark
+* Data Warehouse
 
 ---
 
@@ -350,6 +362,8 @@ O projeto busca consolidar conhecimentos em:
 * engenharia de dados;
 * APIs REST;
 * arquitetura modular;
+* arquitetura em camadas;
+* desacoplamento entre API e acesso a dados;
 * testes automatizados;
 * CI/CD;
 * observabilidade;
