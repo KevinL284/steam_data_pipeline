@@ -4,7 +4,7 @@ Database access module.
 
 import logging
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 from app.core.config import DATABASE_URL
 
@@ -21,7 +21,15 @@ def save_games_data(df):
     logger.info("Iniciando persistência dos dados no banco")
 
     try:
-        df.to_sql("games", con=engine, if_exists="replace", index=False)
+        with engine.begin() as connection:
+            connection.execute(text("TRUNCATE TABLE games"))
+
+            df.to_sql(
+                "games",
+                con=connection,
+                if_exists="append",
+                index=False,
+            )
 
         logger.info(
             "Dados salvos com sucesso no banco de dados. Total de registros: %s",
